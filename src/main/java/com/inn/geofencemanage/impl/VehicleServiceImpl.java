@@ -1,7 +1,5 @@
 package com.inn.geofencemanage.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,14 +15,15 @@ import com.inn.geofencemanage.repository.GeofenceRepository;
 import com.inn.geofencemanage.repository.VehicleRepository;
 import com.inn.geofencemanage.service.VehicleService;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class VehicleServiceImpl implements VehicleService {
-
-	private static final Logger logger = LoggerFactory.getLogger(VehicleServiceImpl.class);
 
 	@Autowired
 	private VehicleRepository vehicleRepository;
@@ -38,7 +37,7 @@ public class VehicleServiceImpl implements VehicleService {
 	@Transactional
 	@Override
 	public VehicleEntity createVehicle(VehicleDTO vehicleDTO) {
-		logger.info("Creating new vehicle with vehicle number: {}", vehicleDTO.getVehicleNumber());
+		log.info("Creating new vehicle with vehicle number: {}", vehicleDTO.getVehicleNumber());
 
 		VehicleEntity vehicleEntity = new VehicleEntity();
 		vehicleEntity.setVehicleName(vehicleDTO.getVehicleName());
@@ -55,12 +54,12 @@ public class VehicleServiceImpl implements VehicleService {
 		}
 
 		if (authorizedGeofence == null) {
-			logger.warn("Vehicle {} is not authorized for any geofence. Creating alert.",
+			log.warn("Vehicle {} is not authorized for any geofence. Creating alert.",
 					vehicleEntity.getVehicleNumber());
 			vehicleEntity.setAuthorizationStatus(AuthorizationStatus.UNAUTHORIZED); // Set status as UNAUTHORIZED
 			createAlert(vehicleEntity, "Unauthorized Access");
 		} else {
-			logger.info("Vehicle {} is authorized in geofence {}", vehicleEntity.getVehicleNumber(),
+			log.info("Vehicle {} is authorized in geofence {}", vehicleEntity.getVehicleNumber(),
 					authorizedGeofence.getGeofence_name());
 			vehicleEntity.setAuthorizationStatus(AuthorizationStatus.AUTHORIZED); // Set status as AUTHORIZED
 			createAlert(vehicleEntity, "Authorized");
@@ -150,7 +149,7 @@ public class VehicleServiceImpl implements VehicleService {
 
 	@Override
 	public VehicleEntity getVehicleById(Long id) {
-		logger.info("Fetching vehicle with ID: {}", id);
+		log.info("Fetching vehicle with ID: {}", id);
 		return vehicleRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID: " + id));
 	}
@@ -158,15 +157,13 @@ public class VehicleServiceImpl implements VehicleService {
 	@Override
 	@Transactional
 	public VehicleEntity updateVehicle(Long id, VehicleDTO vehicleDTO) {
-		logger.info("Updating vehicle with ID: {}", id);
-		
+		log.info("Updating vehicle with ID: {}", id);
 
 		VehicleEntity vehicleEntity = vehicleRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID: " + id));
 
 		LocalDateTime oldEntryTime = vehicleEntity.getEntryTime();
 		LocalDateTime newEntryTime = vehicleDTO.getEntryTime();
-	
 
 		vehicleEntity.setVehicleName(vehicleDTO.getVehicleName());
 		vehicleEntity.setVehicleNumber(vehicleDTO.getVehicleNumber());
@@ -208,7 +205,7 @@ public class VehicleServiceImpl implements VehicleService {
 	@Override
 	@Transactional
 	public void deleteVehicle(Long id) {
-		logger.info("Deleting vehicle with ID: {}", id);
+		log.info("Deleting vehicle with ID: {}", id);
 
 		VehicleEntity vehicleEntity = vehicleRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID: " + id));
@@ -220,7 +217,7 @@ public class VehicleServiceImpl implements VehicleService {
 
 	@Override
 	public List<VehicleEntity> getAllVehicles() {
-		logger.info("Fetching all vehicles from the database");
+		log.info("Fetching all vehicles from the database");
 		return vehicleRepository.findAll();
 	}
 }

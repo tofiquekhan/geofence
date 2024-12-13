@@ -11,28 +11,26 @@ import org.springframework.web.bind.annotation.*;
 
 import com.inn.geofencemanage.geofencedir.entity.AlertEntity;
 import com.inn.geofencemanage.response.ApiResponse;
+import com.inn.geofencemanage.response.ResponseHandler;
 import com.inn.geofencemanage.service.AlertService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/api/alerts")
 public class AlertController {
-
-	private static final Logger logger = LoggerFactory.getLogger(AlertController.class);
 
 	@Autowired
 	private AlertService alertService;
 
 	@GetMapping("/all")
 	public ResponseEntity<ApiResponse> getAllAlerts() {
-		logger.info("Request received to fetch all alerts");
-		try {
+		log.info("fetch all Alert");
 
-			List<AlertEntity> alerts = alertService.getAllAlerts();
-			return ResponseEntity.ok(new ApiResponse(true, "Alerts fetched successfully", alerts));
-		} catch (Exception e) {
-			logger.error("Error occurred while fetching alerts: {}", e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ApiResponse(false, "Error occurred while fetching alerts", null));
-		}
+		List<AlertEntity> alerts = alertService.getAllAlerts();
+		log.info("Fetched {} Alert successfully", alerts.size());
+		return ResponseHandler.generateResponse("Alerts fetched successfully", HttpStatus.OK, alerts);
+
 	}
 }

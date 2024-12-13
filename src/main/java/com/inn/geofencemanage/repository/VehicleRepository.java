@@ -1,6 +1,5 @@
 package com.inn.geofencemanage.repository;
 
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.inn.geofencemanage.geofencedir.entity.VehicleEntity;
@@ -11,11 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface VehicleRepository extends JpaRepository<VehicleEntity, Long> {
-	  Optional<VehicleEntity> findByVehicleNumber(String vehicleNumber);
-	  //  List<VehicleEntity> findByEntryTimeBetween(LocalDateTime startDate, LocalDateTime endDate);
+	Optional<VehicleEntity> findByVehicleNumber(String vehicleNumber);
 
-	    List<VehicleEntity> findAll(); // No filtering, fetch all vehicles
+	List<VehicleEntity> findAll(); // No filtering, fetch all vehicles
 
 }
-
-

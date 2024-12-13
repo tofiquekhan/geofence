@@ -16,41 +16,37 @@ import java.time.LocalDateTime;
 @Transactional
 public class VehicleEntity extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "vehicle_name", nullable = false)
-    private String vehicleName;
+	@Column(name = "vehicle_name", nullable = false)
+	private String vehicleName;
 
-    @Column(name = "vehicle_number", nullable = false, unique = true)
-    private String vehicleNumber;	
+	@Column(name = "vehicle_number", nullable = false, unique = true)
+	private String vehicleNumber;
 
-    @Column(name = "latitude")
-    private Double latitude;  
+	@Column(name = "latitude")
+	private Double latitude;
 
-    @Column(name = "longitude")
-    private Double longitude; 
+	@Column(name = "longitude")
+	private Double longitude;
 
-    @Column(name = "entry_time")
-    private LocalDateTime entryTime; 
+	@Column(name = "entry_time")
+	private LocalDateTime entryTime;
 
-    @Column(name = "exit_time")
-    private LocalDateTime exitTime;
+	@Column(name = "exit_time")
+	private LocalDateTime exitTime;
 
-    @Column(name = "stay_duration")
-    private Long stayDuration;
+	@Column(name = "stay_duration")
+	private Long stayDuration;
 
-    @ManyToOne(cascade = CascadeType.PERSIST) 
-    @JoinColumn(name = "geofence_id")
-    private GeofenceEntity geofence;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(name = "authorization_status")
-    private AuthorizationStatus authorizationStatus;
-   
- 
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "geofence_id")
+	private GeofenceEntity geofence;
 
-	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "authorization_status")
+	private AuthorizationStatus authorizationStatus;
 
 }

@@ -1,29 +1,34 @@
 package com.inn.geofencemanage.exception;
 
 import com.inn.geofencemanage.response.ApiResponse;
+import com.inn.geofencemanage.response.ResponseHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class CustomExceptionHandler {
+public class GlobalExceptionHandler {
 
+	// Handle ResourceNotFoundException
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ApiResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
-		ApiResponse response = new ApiResponse(false, ex.getMessage(), null);
-		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.NOT_FOUND, null);
+
 	}
 
+	// Handle ValidationException
 	@ExceptionHandler(ValidationException.class)
 	public ResponseEntity<ApiResponse> handleValidationException(ValidationException ex) {
-		ApiResponse response = new ApiResponse(false, ex.getMessage(), null);
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
+
 	}
 
+	// Handle all other Exceptions
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiResponse> handleGenericException(Exception ex) {
-		ApiResponse response = new ApiResponse(false, "An unexpected error occurred: " + ex.getMessage(), null);
-		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		return ResponseHandler.generateResponse("An unexpected error occurred: " + ex.getMessage(),
+				HttpStatus.INTERNAL_SERVER_ERROR, null);
+
 	}
 }

@@ -1,32 +1,36 @@
 package com.inn.geofencemanage.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.inn.geofencemanage.exception.ResourceNotFoundException;
 import com.inn.geofencemanage.geofencedir.entity.AlertEntity;
 import com.inn.geofencemanage.repository.AlertRepository;
 import com.inn.geofencemanage.service.AlertService;
 
-import java.util.List;  // Import List
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
+@Slf4j
 @Service
 public class AlertServiceImpl implements AlertService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AlertServiceImpl.class);
+	@Autowired
+	private AlertRepository alertRepository;
 
-    @Autowired
-    private AlertRepository alertRepository;
+	@Override
+	public List<AlertEntity> getAllAlerts() {
+		log.info("Fetching all alerts from the repository");
 
-    @Override
-    public List<AlertEntity> getAllAlerts() {
-        logger.info("Fetching all alerts from the repository");
-        try {
-            return alertRepository.findAll();  // Fetch all alerts from the database
-        } catch (Exception ex) {
-            logger.error("Error occurred while fetching all alerts: {}", ex.getMessage());
-            throw new RuntimeException("Unexpected error occurred while fetching alerts", ex);
-        }
-    }
+		List<AlertEntity> alerts = alertRepository.findAll();
+
+		
+		if (alerts.isEmpty()) {
+			log.error("No alerts found");
+			throw new ResourceNotFoundException("No alerts found");
+		}
+
+		return alerts; 
+	}
 }
